@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'racing/race_schedule_page.dart';
+import 'racing/RaceSchedule/race_schedule_page.dart';
 import 'racing/standings_page.dart';
 
 class MainScreen extends StatefulWidget {

@@ -16,18 +16,26 @@ class RaceResultsModel extends ChangeNotifier {
     if (response.statusCode == 200) {
       dom.Document document = parser.parse(response.body);
       final raceRows =
-          document.querySelectorAll('table.resultsarchive-table > tbody > tr');
+          document.querySelectorAll('table.resultsarchive-table tbody tr');
+      document.querySelectorAll('table.resultsarchive-table tbody tr');
 
       raceResults.clear(); // Clear the list before adding new data
 
       for (dom.Element row in raceRows) {
         final grandPrix =
-            row.querySelector('td:nth-child(2) > a')?.text.trim() ?? '';
-        final date = row.querySelector('td:nth-child(3)')?.text.trim() ?? '';
-        final winner = row.querySelector('td:nth-child(4)')?.text.trim() ?? '';
-        final car = row.querySelector('td:nth-child(5)')?.text.trim() ?? '';
-        final laps = row.querySelector('td:nth-child(6)')?.text.trim() ?? '';
-        final time = row.querySelector('td:nth-child(7)')?.text.trim() ?? '';
+            row.querySelector('td.dark.bold > a')?.text.trim() ?? '';
+        final date =
+            row.querySelector('td.dark.hide-for-mobile')?.text.trim() ?? '';
+        // Combine texts for the winner's name and abbreviation
+        final winnerNameParts = row.querySelectorAll('td.dark.bold > span');
+        final winner = winnerNameParts.map((e) => e.text.trim()).join(" ");
+        final car =
+            row.querySelector('td.semi-bold.uppercase')?.text.trim() ?? '';
+        final laps =
+            row.querySelector('td.bold.hide-for-mobile')?.text.trim() ?? '';
+        final time =
+            row.querySelector('td.dark.bold.hide-for-tablet')?.text.trim() ??
+                '';
 
         raceResults.add(RaceResultData(
           grandPrix: grandPrix,
@@ -38,6 +46,8 @@ class RaceResultsModel extends ChangeNotifier {
           time: time,
         ));
       }
+      var reverser = raceResults.reversed;
+      raceResults = List.from(reverser);
       notifyListeners();
     } else {
       throw Exception('Failed to load race results');
